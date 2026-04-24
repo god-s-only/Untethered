@@ -1,4 +1,4 @@
-package com.untethered.app.presentation.terminal
+package com.untethered.app.presentation.ui.terminal
 
 import androidx.compose.ui.text.AnnotatedString
 

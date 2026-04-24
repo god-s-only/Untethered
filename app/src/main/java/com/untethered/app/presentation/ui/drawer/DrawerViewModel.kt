@@ -1,4 +1,4 @@
-package com.untethered.app.presentation.drawer
+package com.untethered.app.presentation.ui.drawer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

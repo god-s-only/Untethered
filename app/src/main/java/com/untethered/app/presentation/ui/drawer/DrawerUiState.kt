@@ -1,4 +1,4 @@
-package com.untethered.app.presentation.drawer
+package com.untethered.app.presentation.ui.drawer
 
 import com.untethered.app.domain.model.CommandHistory
 import com.untethered.app.domain.model.CommandSnippet
