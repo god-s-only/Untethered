@@ -1,4 +1,4 @@
-package com.untethered.app.ui.theme
+package com.untethered.app.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -31,4 +31,19 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
     */
+)
+
+val TerminalTextStyle = TextStyle(
+    fontFamily = FontFamily.Monospace,
+    fontSize = 13.sp,
+    fontWeight = FontWeight.Normal,
+    lineHeight = 20.sp,
+    letterSpacing = 0.sp
+)
+
+val TerminalInputStyle = TextStyle(
+    fontFamily = FontFamily.Monospace,
+    fontSize = 14.sp,
+    fontWeight = FontWeight.Normal,
+    letterSpacing = 0.sp
 )
