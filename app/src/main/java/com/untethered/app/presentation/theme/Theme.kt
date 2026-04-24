@@ -8,6 +8,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -36,7 +37,19 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
-
+private val TerminalColorScheme = darkColorScheme(
+    primary        = TerminalGreen,
+    secondary      = TerminalCyan,
+    background     = TerminalBackground,
+    surface        = TerminalSurface,
+    onPrimary      = Color.Black,
+    onSecondary    = Color.Black,
+    onBackground   = TerminalWhite,
+    onSurface      = TerminalWhite,
+    error          = TerminalRed,
+    onError        = Color.Black,
+    outline        = TerminalBorder
+)
 
 @Composable
 fun UntetheredTheme(
@@ -56,7 +69,7 @@ fun UntetheredTheme(
     }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = TerminalColorScheme,
         typography = Typography,
         content = content
     )
