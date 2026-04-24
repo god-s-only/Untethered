@@ -1,4 +1,4 @@
-package com.untethered.app.ui.theme
+package com.untethered.app.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 
