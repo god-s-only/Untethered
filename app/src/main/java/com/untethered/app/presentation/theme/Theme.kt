@@ -36,20 +36,7 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
-val TerminalTextStyle = TextStyle(
-    fontFamily = FontFamily.Monospace,
-    fontSize = 13.sp,
-    fontWeight = FontWeight.Normal,
-    lineHeight = 20.sp,
-    letterSpacing = 0.sp
-)
 
-val TerminalInputStyle = TextStyle(
-    fontFamily = FontFamily.Monospace,
-    fontSize = 14.sp,
-    fontWeight = FontWeight.Normal,
-    letterSpacing = 0.sp
-)
 
 @Composable
 fun UntetheredTheme(
