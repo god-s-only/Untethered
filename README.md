@@ -16,11 +16,6 @@ Every Android developer occasionally needs to run a shell command on their phone
 
 ---
 
-## Screenshots
-
-> _Add your screenshots here._
-
----
 
 ## Features
 
