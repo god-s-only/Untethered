@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.BookmarkAdd
 import androidx.compose.material.icons.filled.Send
@@ -43,6 +44,7 @@ fun TerminalInputBar(
     onInputChanged: (String) -> Unit,
     onSend: () -> Unit,
     onHistoryUp: () -> Unit,
+    onHistoryDown: () -> Unit,
     onCtrlC: () -> Unit,
     onSaveSnippet: () -> Unit,
     modifier: Modifier = Modifier
@@ -104,6 +106,21 @@ fun TerminalInputBar(
             Icon(
                 imageVector = Icons.Default.ArrowUpward,
                 contentDescription = "Previous command",
+                tint = if (!isRunning) {
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                } else {
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+                }
+            )
+        }
+
+        IconButton(
+            onClick = onHistoryDown,
+            enabled = !isRunning
+        ) {
+            Icon(
+                imageVector = Icons.Default.ArrowDownward,
+                contentDescription = "Next command",
                 tint = if (!isRunning) {
                     MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 } else {

@@ -27,14 +27,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.untethered.app.presentation.terminal.components.TerminalWelcome
 import com.untethered.app.presentation.theme.TerminalBackground
 import com.untethered.app.presentation.theme.TerminalGreen
 import com.untethered.app.presentation.theme.TerminalSurface
 import com.untethered.app.presentation.ui.drawer.DrawerViewModel
 import com.untethered.app.presentation.ui.terminal.TerminalViewModel
+import com.untethered.app.presentation.ui.terminal.components.SaveSnippetDialog
 import com.yourname.termidroid.presentation.drawer.TerminalDrawer
 import com.yourname.termidroid.presentation.terminal.components.ShizukuBanner
 import com.yourname.termidroid.presentation.terminal.components.TerminalInputBar
@@ -50,6 +55,8 @@ fun TerminalScreen(
 ) {
     val terminalState by terminalViewModel.uiState.collectAsState()
     val drawerState by drawerViewModel.uiState.collectAsState()
+
+    var showSnippetDialog by remember { mutableStateOf(false) }
 
     val drawerNavState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -115,6 +122,17 @@ fun TerminalScreen(
             },
             containerColor = TerminalBackground
         ) { paddingValues ->
+
+            if (showSnippetDialog) {
+                SaveSnippetDialog(
+                    command = terminalState.inputText,
+                    onConfirm = { label ->
+                        drawerViewModel.onSaveSnippet(terminalState.inputText, label)
+                        showSnippetDialog = false
+                    },
+                    onDismiss = { showSnippetDialog = false }
+                )
+            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -134,6 +152,14 @@ fun TerminalScreen(
                         .background(TerminalBackground),
                     contentPadding = paddingValues
                 ) {
+                    if (terminalState.lines.isEmpty()) {
+                        item {
+                            TerminalWelcome(
+                                shizukuAvailable = terminalState.shizukuAvailable,
+                                permissionGranted = terminalState.shizukuPermissionGranted
+                            )
+                        }
+                    }
                     items(
                         items = terminalState.lines,
                         key = { line -> System.identityHashCode(line) }
@@ -148,9 +174,11 @@ fun TerminalScreen(
                     onInputChanged = terminalViewModel::onInputChanged,
                     onSend = terminalViewModel::onSendCommand,
                     onHistoryUp = terminalViewModel::onHistoryUp,
+                    onHistoryDown = terminalViewModel::onHistoryDown,
                     onCtrlC = terminalViewModel::onCtrlC,
                     onSaveSnippet = {
                         drawerViewModel.onSaveSnippet(terminalState.inputText)
+                        showSnippetDialog = true
                     },
                     modifier = Modifier
                         .navigationBarsPadding()
