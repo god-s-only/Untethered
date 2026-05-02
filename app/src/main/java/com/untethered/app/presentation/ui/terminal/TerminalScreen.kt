@@ -1,7 +1,6 @@
-package com.yourname.termidroid.presentation.terminal
+package com.untethered.app.presentation.ui.terminal
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
@@ -12,7 +11,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ClearAll
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Terminal
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -38,9 +36,8 @@ import com.untethered.app.presentation.theme.TerminalBackground
 import com.untethered.app.presentation.theme.TerminalGreen
 import com.untethered.app.presentation.theme.TerminalSurface
 import com.untethered.app.presentation.ui.drawer.DrawerViewModel
-import com.untethered.app.presentation.ui.terminal.TerminalViewModel
 import com.untethered.app.presentation.ui.terminal.components.SaveSnippetDialog
-import com.yourname.termidroid.presentation.drawer.TerminalDrawer
+import com.untethered.app.presentation.ui.drawer.TerminalDrawer
 import com.yourname.termidroid.presentation.terminal.components.ShizukuBanner
 import com.yourname.termidroid.presentation.terminal.components.TerminalInputBar
 import com.yourname.termidroid.presentation.terminal.components.TerminalLineItem
@@ -82,7 +79,8 @@ fun TerminalScreen(
                 },
                 onDeleteHistory = drawerViewModel::onDeleteHistoryItem,
                 onClearHistory = drawerViewModel::onClearHistory,
-                onDeleteSnippet = drawerViewModel::onDeleteSnippet
+                onDeleteSnippet = drawerViewModel::onDeleteSnippet,
+                onSaveSnippet = { drawerViewModel.onSaveSnippet(command = it.command) }
             )
         }
     ) {
@@ -177,7 +175,6 @@ fun TerminalScreen(
                     onHistoryDown = terminalViewModel::onHistoryDown,
                     onCtrlC = terminalViewModel::onCtrlC,
                     onSaveSnippet = {
-                        drawerViewModel.onSaveSnippet(terminalState.inputText)
                         showSnippetDialog = true
                     },
                     modifier = Modifier

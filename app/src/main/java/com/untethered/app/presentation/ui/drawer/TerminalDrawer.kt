@@ -1,4 +1,4 @@
-package com.yourname.termidroid.presentation.drawer
+package com.untethered.app.presentation.ui.drawer
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -29,6 +29,7 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,7 +38,6 @@ import com.untethered.app.domain.model.CommandSnippet
 import com.untethered.app.presentation.theme.TerminalBorder
 import com.untethered.app.presentation.theme.TerminalGray
 import com.untethered.app.presentation.theme.TerminalGreen
-import com.untethered.app.presentation.ui.drawer.DrawerUiState
 
 
 @Composable
@@ -47,6 +47,7 @@ fun TerminalDrawer(
     onDeleteHistory: (Long) -> Unit,
     onClearHistory: () -> Unit,
     onDeleteSnippet: (Long) -> Unit,
+    onSaveSnippet: (CommandHistory) -> Unit,
     modifier: Modifier = Modifier
 ) {
     ModalDrawerSheet(
@@ -77,7 +78,8 @@ fun TerminalDrawer(
                     SwipeToDismissHistoryItem(
                         item = item,
                         onSelect = { onCommandSelected(item.command) },
-                        onDismiss = { onDeleteHistory(item.id) }
+                        onDismiss = { onDeleteHistory(item.id) },
+                        onSave = {onSaveSnippet(it)}
                     )
                 }
             }
@@ -126,8 +128,8 @@ fun TerminalDrawer(
 @Composable
 private fun DrawerSectionHeader(
     title: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    actionIcon: androidx.compose.ui.graphics.vector.ImageVector?,
+    icon: ImageVector,
+    actionIcon: ImageVector?,
     actionDescription: String?,
     onAction: () -> Unit
 ) {
@@ -176,7 +178,8 @@ private fun DrawerEmptyHint(text: String) {
 private fun SwipeToDismissHistoryItem(
     item: CommandHistory,
     onSelect: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onSave: (CommandHistory) -> Unit
 ) {
     val dismissState = rememberSwipeToDismissBoxState(
         confirmValueChange = { value ->
@@ -196,7 +199,9 @@ private fun SwipeToDismissHistoryItem(
             command = item.command,
             subtitle = null,
             onClick = onSelect,
-            onLongClick = {}   // long-press to save snippet wired at screen level
+            onLongClick = {
+                onSave(item)
+            }
         )
     }
 }
