@@ -1,4 +1,4 @@
-package com.yourname.termidroid.presentation.terminal.components
+package com.untethered.app.presentation.ui.terminal.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -55,7 +55,7 @@ fun TerminalInputBar(
         modifier = modifier
             .fillMaxWidth()
             .background(TerminalSurface)
-            .padding(horizontal = 4.dp, vertical = 4.dp),
+            .padding(horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (isRunning) {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -31,17 +32,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.untethered.app.presentation.terminal.components.TerminalWelcome
+import com.untethered.app.presentation.ui.drawer.DrawerViewModel
+import com.untethered.app.presentation.ui.drawer.TerminalDrawer
+import com.untethered.app.presentation.ui.terminal.components.SaveSnippetDialog
+import com.untethered.app.presentation.ui.terminal.components.ShizukuBanner
+import com.untethered.app.presentation.ui.terminal.components.TerminalInputBar
+import com.untethered.app.presentation.ui.terminal.components.TerminalLineItem
+import com.untethered.app.presentation.ui.terminal.components.TerminalWelcome
 import com.untethered.app.presentation.theme.TerminalBackground
 import com.untethered.app.presentation.theme.TerminalGreen
 import com.untethered.app.presentation.theme.TerminalSurface
-import com.untethered.app.presentation.ui.drawer.DrawerViewModel
-import com.untethered.app.presentation.ui.terminal.components.SaveSnippetDialog
-import com.untethered.app.presentation.ui.drawer.TerminalDrawer
-import com.yourname.termidroid.presentation.terminal.components.ShizukuBanner
-import com.yourname.termidroid.presentation.terminal.components.TerminalInputBar
-import com.yourname.termidroid.presentation.terminal.components.TerminalLineItem
-
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,8 +64,20 @@ fun TerminalScreen(
             listState.animateScrollToItem(terminalState.lines.lastIndex)
         }
     }
+
     LaunchedEffect(drawerNavState.currentValue) {
         terminalViewModel.refreshShizukuState()
+    }
+
+    if (showSnippetDialog) {
+        SaveSnippetDialog(
+            command = terminalState.inputText,
+            onConfirm = { label ->
+                drawerViewModel.onSaveSnippet(terminalState.inputText, label)
+                showSnippetDialog = false
+            },
+            onDismiss = { showSnippetDialog = false }
+        )
     }
 
     ModalNavigationDrawer(
@@ -89,7 +101,7 @@ fun TerminalScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            text = "Terminal",
+                            text = "Untethered",
                             color = TerminalGreen
                         )
                     },
@@ -120,21 +132,11 @@ fun TerminalScreen(
             },
             containerColor = TerminalBackground
         ) { paddingValues ->
-
-            if (showSnippetDialog) {
-                SaveSnippetDialog(
-                    command = terminalState.inputText,
-                    onConfirm = { label ->
-                        drawerViewModel.onSaveSnippet(terminalState.inputText, label)
-                        showSnippetDialog = false
-                    },
-                    onDismiss = { showSnippetDialog = false }
-                )
-            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(TerminalBackground)
+                    .padding(paddingValues)
             ) {
                 ShizukuBanner(
                     shizukuAvailable = terminalState.shizukuAvailable,
@@ -147,20 +149,20 @@ fun TerminalScreen(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxSize()
-                        .background(TerminalBackground),
-                    contentPadding = paddingValues
+                        .background(TerminalBackground)
                 ) {
                     if (terminalState.lines.isEmpty()) {
-                        item {
+                        item(key = "welcome") {
                             TerminalWelcome(
                                 shizukuAvailable = terminalState.shizukuAvailable,
                                 permissionGranted = terminalState.shizukuPermissionGranted
                             )
                         }
                     }
+
                     items(
                         items = terminalState.lines,
-                        key = { line -> System.identityHashCode(line) }
+                        key = { line -> line.id }
                     ) { line ->
                         TerminalLineItem(line = line)
                     }
@@ -174,12 +176,7 @@ fun TerminalScreen(
                     onHistoryUp = terminalViewModel::onHistoryUp,
                     onHistoryDown = terminalViewModel::onHistoryDown,
                     onCtrlC = terminalViewModel::onCtrlC,
-                    onSaveSnippet = {
-                        showSnippetDialog = true
-                    },
-                    modifier = Modifier
-                        .navigationBarsPadding()
-                        .imePadding()
+                    onSaveSnippet = { showSnippetDialog = true },
                 )
             }
         }

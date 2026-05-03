@@ -1,4 +1,4 @@
-package com.yourname.termidroid.presentation.terminal.components
+package com.untethered.app.presentation.ui.terminal.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
