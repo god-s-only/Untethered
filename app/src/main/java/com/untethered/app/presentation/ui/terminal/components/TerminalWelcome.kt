@@ -1,4 +1,4 @@
-package com.untethered.app.presentation.terminal.components
+package com.untethered.app.presentation.ui.terminal.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
