@@ -39,7 +39,6 @@ import com.untethered.app.presentation.theme.TerminalBorder
 import com.untethered.app.presentation.theme.TerminalGray
 import com.untethered.app.presentation.theme.TerminalGreen
 
-
 @Composable
 fun TerminalDrawer(
     uiState: DrawerUiState,
@@ -56,7 +55,7 @@ fun TerminalDrawer(
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
 
-            item {
+            item(key = "header_history") {
                 DrawerSectionHeader(
                     title = "History",
                     icon = Icons.Default.History,
@@ -67,24 +66,24 @@ fun TerminalDrawer(
             }
 
             if (uiState.history.isEmpty()) {
-                item {
+                item(key = "empty_history") {
                     DrawerEmptyHint("No commands yet")
                 }
             } else {
                 items(
                     items = uiState.history,
-                    key = { it.id }
+                    key = { "history_${it.id}" }
                 ) { item ->
                     SwipeToDismissHistoryItem(
                         item = item,
                         onSelect = { onCommandSelected(item.command) },
                         onDismiss = { onDeleteHistory(item.id) },
-                        onSave = {onSaveSnippet(it)}
+                        onSave = { onSaveSnippet(it) }
                     )
                 }
             }
 
-            item {
+            item(key = "divider") {
                 HorizontalDivider(
                     color = TerminalBorder,
                     thickness = 1.dp,
@@ -92,7 +91,7 @@ fun TerminalDrawer(
                 )
             }
 
-            item {
+            item(key = "header_snippets") {
                 DrawerSectionHeader(
                     title = "Snippets",
                     icon = Icons.Default.Bookmark,
@@ -103,13 +102,13 @@ fun TerminalDrawer(
             }
 
             if (uiState.snippets.isEmpty()) {
-                item {
+                item(key = "empty_snippets") {
                     DrawerEmptyHint("No saved snippets.\nLong-press a history item to save.")
                 }
             } else {
                 items(
                     items = uiState.snippets,
-                    key = { it.id }
+                    key = { "snippet_${it.id}" }
                 ) { item ->
                     SwipeToDismissSnippetItem(
                         item = item,
@@ -119,11 +118,12 @@ fun TerminalDrawer(
                 }
             }
 
-            item { Spacer(modifier = Modifier.height(24.dp)) }
+            item(key = "footer_spacer") {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
     }
 }
-
 
 @Composable
 private fun DrawerSectionHeader(
@@ -199,9 +199,7 @@ private fun SwipeToDismissHistoryItem(
             command = item.command,
             subtitle = null,
             onClick = onSelect,
-            onLongClick = {
-                onSave(item)
-            }
+            onLongClick = { onSave(item) }
         )
     }
 }
@@ -225,7 +223,7 @@ private fun SwipeToDismissSnippetItem(
     SwipeToDismissBox(
         state = dismissState,
         backgroundContent = { SwipeDismissBackground() },
-        enableDismissFromStartToEnd = false
+        enableDismissFromStartToEnd = false,
     ) {
         DrawerCommandItem(
             command = item.command,

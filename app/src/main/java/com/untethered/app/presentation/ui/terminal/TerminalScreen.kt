@@ -177,9 +177,6 @@ fun TerminalScreen(
                     onHistoryDown = terminalViewModel::onHistoryDown,
                     onCtrlC = terminalViewModel::onCtrlC,
                     onSaveSnippet = { showSnippetDialog = true },
-                    modifier = Modifier
-                        .navigationBarsPadding()
-                        .imePadding()
                 )
             }
         }

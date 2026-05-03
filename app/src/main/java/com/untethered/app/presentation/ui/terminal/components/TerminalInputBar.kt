@@ -55,7 +55,7 @@ fun TerminalInputBar(
         modifier = modifier
             .fillMaxWidth()
             .background(TerminalSurface)
-            .padding(horizontal = 4.dp, vertical = 4.dp),
+            .padding(horizontal = 4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (isRunning) {
