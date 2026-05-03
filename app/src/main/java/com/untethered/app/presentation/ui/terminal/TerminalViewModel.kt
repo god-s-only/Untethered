@@ -41,8 +41,9 @@ class TerminalViewModel @Inject constructor(
 
     private val sessionHistory = mutableListOf<String>()
     private var historyIndex = -1
-
     private var commandJob: Job? = null
+
+    private var lineCounter = 0L
 
     private val permissionListener =
         Shizuku.OnRequestPermissionResultListener { requestCode, grantResult ->
@@ -60,6 +61,7 @@ class TerminalViewModel @Inject constructor(
         )
         refreshShizukuState()
     }
+
     fun onInputChanged(text: String) {
         _uiState.update { it.copy(inputText = text) }
         historyIndex = -1
@@ -88,9 +90,7 @@ class TerminalViewModel @Inject constructor(
     fun onHistoryUp() {
         if (sessionHistory.isEmpty()) return
         historyIndex = (historyIndex + 1).coerceAtMost(sessionHistory.lastIndex)
-        _uiState.update {
-            it.copy(inputText = sessionHistory[historyIndex])
-        }
+        _uiState.update { it.copy(inputText = sessionHistory[historyIndex]) }
     }
 
     fun onHistoryDown() {
@@ -124,6 +124,7 @@ class TerminalViewModel @Inject constructor(
         }
         sessionHistory.clear()
         historyIndex = -1
+        lineCounter = 0L  // reset counter on session clear
     }
 
     fun onPasteCommand(command: String) {
@@ -143,7 +144,6 @@ class TerminalViewModel @Inject constructor(
         }
     }
 
-
     private fun runCommand(command: String) {
         commandJob?.cancel()
         commandJob = viewModelScope.launch {
@@ -160,14 +160,12 @@ class TerminalViewModel @Inject constructor(
                         is CommandResult.Running -> {
                             _uiState.update { it.copy(isRunning = true) }
                         }
-
                         is CommandResult.Output -> {
                             appendLine(
                                 raw = result.line,
                                 isError = result.isError
                             )
                         }
-
                         is CommandResult.Exit -> {
                             if (result.code != 0) {
                                 appendLine(
@@ -194,6 +192,7 @@ class TerminalViewModel @Inject constructor(
         }
 
         val newLine = TerminalLineUi(
+            id = lineCounter++,
             annotated = annotated,
             isError = isError,
             isInput = isInput
@@ -201,11 +200,7 @@ class TerminalViewModel @Inject constructor(
 
         _uiState.update { state ->
             val updatedLines = (state.lines + newLine).let { lines ->
-                if (lines.size > MAX_LINES) {
-                    lines.takeLast(MAX_LINES)
-                } else {
-                    lines
-                }
+                if (lines.size > MAX_LINES) lines.takeLast(MAX_LINES) else lines
             }
             state.copy(lines = updatedLines)
         }
