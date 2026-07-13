@@ -31,6 +31,17 @@ Every Android developer occasionally needs to run a shell command on their phone
 
 ---
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/assets/first.png" width="19%"/>
+  <img src="docs/assets/second.png" width="19%"/>
+  <img src="docs/assets/third.png" width="19%"/>
+  <img src="docs/assets/fourth.png" width="19%"/>
+</p>
+
+---
+
 ## Requirements
 
 | Requirement | Details |
